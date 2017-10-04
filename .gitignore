@@ -1,0 +1,27 @@
+### Python ###
+*.pyc
+*.py~
+*.txt~
+*.py[cod]
+
+### Emacs ###
+*~
+\#*\#
+.elc
+auto-save-list
+tramp
+.\#*
+*.pdf
+*.log
+#venv
+/bin
+/include
+/env
+/lib/python*/*
+!/tests/*.docx
+.~lock.*.xlsx#
+.~lock.*.xls#
+/data/*.xml
+/out
+.coverage
+.coveragerc

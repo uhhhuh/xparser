@@ -1,0 +1,10 @@
+(lp1
+(dp2
+S'vehicle_pay'
+p3
+V\u043d\u0435 \u0438\u043c\u0435\u0435\u0442
+p4
+sS'vehicle_item'
+p5
+g4
+sa.
