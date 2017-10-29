@@ -1,8 +1,8 @@
-# xparser
+# Парсер файлов с антикоррупционными декларациями МВД
 
-Dependencies:
-see `requirements.txt`
+Зависимости:
+см. `requirements.txt`
 
-Run:
-./xparse.py file.xlsx -c A2:A222 -s 20
+Запуск:
+./xparse.py имя_файла.xlsx -c A2:A222 -s 20
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -73,30 +73,30 @@ def value_from_dict(value, dictionary='none_values'):
         return value
     try:
         return dictionaries[dictionary][normalize(value)]
-    except Exception, err:
-        logger.warning(u'"{0}" not in <{1}>'.format(value, dictionary))
+    except Exception as err:
+        logger.warning('"{0}" not in <{1}>'.format(value, dictionary))
         return value
 
 
 def not_empty(val):
         """Check value for empty and unwanted values"""
         unwanted = [
-            u'автомобиль легковой:',
-            u'автомобили легковые:',
-            u'автоприцеп:',
-            u'водный транспорт:',
-            u'мототранспортные средства:',
-            u'автоприцепы:',
-            u'иные транспортные средства:',
-            u'мототранспортное средство:'
+            'автомобиль легковой:',
+            'автомобили легковые:',
+            'автоприцеп:',
+            'водный транспорт:',
+            'мототранспортные средства:',
+            'автоприцепы:',
+            'иные транспортные средства:',
+            'мототранспортное средство:'
             ]
-        empty_values = [u'-', u' ', u'', u'не имеет', None]
+        empty_values = ['-', ' ', '', 'не имеет', None]
         
         if type(val).__name__ in ('str', 'unicode'): # FIXME: `isinstance(val, types)` is better
             val = " ".join(val.lower().split()) # catch ' -', ' не  имеет '...
             
-        if type(val).__name__ in ('int', 'long', 'float',):
-            val = unicode(val)
+        if type(val).__name__ in ('int', 'float'):
+            val = str(val)
             
         if val not in empty_values and val not in unwanted:
             return True
@@ -113,7 +113,7 @@ def parse_person(column_range):
     try:
         start, end = column_range.split(':')
         logger.info('Parsing persons from {} to {}'.format(start, end))
-    except Exception, err:
+    except Exception as err:
         logger.error('Invalid column range'.format(err))
 
     unwanted_chars = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ '
@@ -131,14 +131,14 @@ def parse_person(column_range):
 
         try:
             p_raw_int = int(p_raw.strip(unwanted_chars))
-        except ValueError, err:
-            logger.warning("Strange P numbering: {}".format(p_raw))
+        except ValueError as err:
+            logger.warning('Strange P numbering: {}'.format(p_raw))
             p_raw_int = p_raw.strip(unwanted_chars)
 
         person_num = 1
         p += 1
         if not ws[b_start].value:
-            logger.warning(u"Person at {0} <{1}>.".format(b_start, ws[b_start].value))
+            logger.warning('Person at {0} <{1}>.'.format(b_start, ws[b_start].value))
         else:
             for b_slot in b_slots:
                 #if b['start'] b_slot['value']
@@ -166,12 +166,12 @@ def parse_person(column_range):
                         })
                     person_id += 1
                     person_num += 1
-                except Exception, err:
-                    logger.error("Error while parsing persons: {}".format(err))
+                except Exception as err:
+                    logger.error('Error while parsing persons: {}'.format(err))
 
     # check whether p_old == p
-    ps_generated = [parsed_persons[i]['p'] for i in xrange(len(parsed_persons))]
-    ps_from_file = [parsed_persons[i]['p_raw'] for i in xrange(len(parsed_persons))]
+    ps_generated = [parsed_persons[i]['p'] for i in range(len(parsed_persons))]
+    ps_from_file = [parsed_persons[i]['p_raw'] for i in range(len(parsed_persons))]
     check_result = check_lists_mismatch(ps_generated, ps_from_file)
     if check_result:
         logger.warning('P numbering mismatch at {}'.format(check_result))
@@ -180,8 +180,8 @@ def parse_person(column_range):
 
 
 def check_lists_mismatch(list_a, list_b):
-    from itertools import izip_longest
-    for a, b in izip_longest(list_a, list_b):
+    from itertools import zip_longest
+    for a, b in zip_longest(list_a, list_b):
         if a == b:
             pass
         else:
@@ -194,7 +194,7 @@ def get_slot(start, end):
     
     def not_false_empty(val):
         """Check whether cell.value is not false empty, e.g. ' ' or '  -  '"""
-        empty_values = [u'-', u' ', u'', None]
+        empty_values = ['-', ' ', '', None]
         if type(val).__name__ in ('str', 'unicode'):
             val = " ".join(val.lower().split()) # catch ' -', ' не  имеет '...
         if val not in empty_values:
@@ -266,9 +266,9 @@ def parse_ownership(person_slot):
                     })
             elif not cell.value and ws[shift_col(coord)].value not in ['-', None]:
                 # checking whether cell to the right is not empty
-                logger.warning(u"Value missing: {}?".format(coord))
+                logger.warning('Value missing: {}?'.format(coord))
                 ownership_list.append({
-                    'own_obj': u'иное', # cell.value to dafult
+                    'own_obj': 'иное', # cell.value to dafult
                     'own_type':ws[shift_col(coord, 1)].value,
                     'own_sq':ws[shift_col(coord, 2)].value,
                     'own_location':ws[shift_col(coord, 3)].value
@@ -295,9 +295,9 @@ def parse_usage(person_slot):
                     'use_loc':ws[shift_col(coord, 2)].value
                     })
             elif not cell.value and ws[shift_col(coord)].value not in ['-', None]:
-                logger.info(u"Value missing: {}?".format(coord))
+                logger.info('Value missing: {}?'.format(coord))
                 usage_list.append({
-                    'use_obj': u'иное',#cell.value,
+                    'use_obj': 'иное',#cell.value,
                     'use_sq': ws[shift_col(coord, 1)].value,
                     'use_loc':ws[shift_col(coord, 2)].value
                     })
@@ -342,7 +342,7 @@ def map_data(person_data):
         if not_empty(realty['own_obj']):
             own_type, own_part = set_ownership(realty)
             realty_data = OrderedDict()
-            #realty_data['realtyType_'] = u'В собственности'
+            #realty_data['realtyType_'] = 'В собственности'
             realty_data['realtyType'] = '1'
             #realty_data['objectType_'] = realty['own_obj']
             realty_data['objectType'] = value_from_dict(realty['own_obj'],'objectType')
@@ -354,19 +354,19 @@ def map_data(person_data):
             realty_data['country'] = value_from_dict(realty['own_location'], 'country')
             realties.append(realty_data)
         else:
-            logger.debug(u"OWN_OBJ EMPTY: {}".format(realty['own_obj']))
+            logger.debug('OWN_OBJ EMPTY: {}'.format(realty['own_obj']))
     for realty in person_data['usage']: # in use
         if not_empty(realty['use_obj']):
             realty_data = OrderedDict()
             realty_data['realtyType'] = '2' # in use:2
-            #realty_data['realtyType_'] = u'В пользовании'
+            #realty_data['realtyType_'] = 'В пользовании'
             realty_data['objectType'] = value_from_dict(realty['use_obj'], 'objectType')
             realty_data['square'] = realty['use_sq']
             #realty_data['country'] = realty['use_loc']
             realty_data['country'] = value_from_dict(realty['use_loc'], 'country')
             realties.append(realty_data)
         else:
-            logger.debug(u"USE_OBJ EMPTY: {}".format(realty['use_obj']))
+            logger.debug('"USE_OBJ EMPTY: {}'.format(realty['use_obj']))
     
     transports = []
     
@@ -376,7 +376,7 @@ def map_data(person_data):
                 'transportName':transport['vehicle_item']
                 }))
         else:
-            logger.debug(u"TRANSPORT EMPTY: {}".format(transport['vehicle_item']))
+            logger.debug('TRANSPORT EMPTY: {}'.format(transport['vehicle_item']))
     income = set_income(person_data)
     incomeComment = None # disabled
     incomeSource = None # disabled
@@ -410,8 +410,8 @@ def set_name(person_data):
         """If relativeOf, set name=None, else name"""
         if person_data['relativeOf']:
             return None
-        elif person_data['name'] in [u'супруг', u'супруга', u'несовершеннолетний ребенок', u'несовершеннолетний ребёнок']:
-            logger.warning("Missing person: P={} at {}".format(
+        elif person_data['name'] in ['супруг', 'супруга', 'несовершеннолетний ребенок', 'несовершеннолетний ребёнок']:
+            logger.warning('Missing person: P={} at {}'.format(
                 person_data['p'],
                 person_data['start']
                 ))
@@ -445,21 +445,21 @@ def set_ownership(realty):
         own_type = realty['own_type']
         own_part = None
         try :
-            if re.search(ur'дол', own_type.lower(), re.UNICODE):
-                logger.debug(u"match: {}".format(own_type))
+            if re.search(r'дол', own_type.lower()):
+                logger.debug('match: {}'.format(own_type))
                 own_part = get_ownpart_amount(realty['own_type'])
-                own_type = u'долевая'
+                own_type = 'долевая'
 
-            elif re.search(ur'инди', own_type.lower(), re.UNICODE):
-                logger.debug(u"match: {}".format(own_type))
-                own_type = u'индивидуальная'
+            elif re.search(r'инди', own_type.lower()):
+                logger.debug('match: {}'.format(own_type))
+                own_type = 'индивидуальная'
 
-            elif re.search(ur'местн', own_type.lower(), re.UNICODE):
-                logger.debug(u"match: {}".format(own_type))
-                own_type = u'совместная'
+            elif re.search(r'местн', own_type.lower()):
+                logger.debug('match: {}'.format(own_type))
+                own_type = 'совместная'
 
             else:
-                logger.info(u"Ownership unknown: {}".format(own_type))
+                logger.info('Ownership unknown: {}'.format(own_type))
         except TypeError:
             logger.warning('Ownership invalid <{}>.'.format(own_type))
         finally:
@@ -523,7 +523,7 @@ def load_file(xls_file):
         ws_name = workbook.sheetnames[0]
         ws = workbook[ws_name]
         logger.info('Data loaded.')
-    except Exception, err:
+    except Exception as err:
         logger.error('Error ({}) loading file: {}'.format(err, xls_file))
     return ws
 
@@ -554,7 +554,7 @@ def save_to_file(blocks_of_data, split_at=0, save_dir='out'):
     except OSError as exc:
         if exc.errno == 17:
             logger.info('Directory "{}" already exists'.format(save_dir))
-    except Exception, err:
+    except Exception as err:
         logger.error('{}. Couldn\'t create directory'.format(err))
         
     blocks_count = 0

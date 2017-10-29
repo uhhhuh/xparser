@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os
@@ -112,7 +112,7 @@ def load_dictionaries(dicts_dir):
     def _load_csv(dict_name, convert=True):
         with open(dicts_dir + os.sep + dict_name + '.csv') as csvfile:
             reader = csv.DictReader(csvfile)
-            mydict = [{unicode(v, 'utf-8'): key_to_int(k, conv=convert) for k,v in row.items()} for row in reader]
+            mydict = [{v: key_to_int(k, conv=convert) for k,v in row.items()} for row in reader]
             for entry in mydict:
                 mydicts[dict_name].update(entry)
 
@@ -120,21 +120,21 @@ def load_dictionaries(dicts_dir):
     def load_csv(dict_name, convert=True):
         with open(dicts_dir + os.sep + dict_name + '.csv') as csvfile:
             reader = csv.DictReader(csvfile)
-            mydict = [{unicode(v, 'utf-8'): key_to_int(k, conv=convert) for k,v in row.items() if v} for row in reader]
+            mydict = [{v: key_to_int(k, conv=convert) for k,v in row.items() if v} for row in reader]
             for entry in mydict:
                 mydicts[dict_name].update(entry)
 
     mydicts = {
-        u'relationType':{},
-        u'objectType': {},
-        u'ownershipType': {},
-        u'country': {}
+        'relationType':{},
+        'objectType': {},
+        'ownershipType': {},
+        'country': {}
         }
     
     for dict_name in mydicts.keys():
         load_csv(dict_name)
 
-    mydicts.update({u'none_values': {}})
+    mydicts.update({'none_values': {}})
     load_csv('none_values', convert=False)
 
     return mydicts
