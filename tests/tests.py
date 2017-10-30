@@ -26,10 +26,10 @@ class TestHell(unittest.TestCase):
     # General helpers
     
     def test_validate_dimensions(self):
-        self.assertIs(xparse.validate_dimensions('A2:A999'), 'valid')
-        self.assertIs(xparse.validate_dimensions('A225:X356'), 'valid')
-        self.assertIs(xparse.validate_dimensions('A:A999'), 'invalid')
-        self.assertIs(xparse.validate_dimensions('A1 :A2'), 'invalid')
+        self.assertTrue(xparse.validate_dimensions('A2:A999'))
+        self.assertTrue(xparse.validate_dimensions('A225:X356'))
+        self.assertFalse(xparse.validate_dimensions('A:A999'))
+        self.assertFalse(xparse.validate_dimensions('A1 :A2'))
 
     def test_not_empty(self):
         self.assertFalse(xparse.not_empty('-'))
